@@ -1,0 +1,60 @@
+#app1 {
+    border: 1px solid #000;
+    width: 50vw;
+    height: 50vh;
+}
+#app1 .output {
+}
+#app1 .actions {
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+ul,
+ol {
+    list-style: none;
+}
+
+#app2 {
+}
+#app2 .tab-bar {
+    display: flex;
+}
+#app2 .tab-bar > li {
+    border: 3px solid #000;
+    width: 50%;
+}
+#app2 .tab-bar > li.selectd {
+    border: 1px solid #000;
+    background-color: pink;
+    counter-reset: white;
+}
+@app2 .tab-content {
+}
+#app2 .tab-content > li {
+    display: none;
+}
+#app2 .tab-content > li.active {
+    display: block;
+}
+
+body {
+    overflow: hidden;
+}
+body > .page {
+    display: flex;
+    flex-flow: row wrap;
+}
+body > .page > section {
+    width: 50vw;
+    height: 50vh;
+}
+
+/*# sourceMappingURL=index.a3bca2a6.css.map */
