@@ -459,51 +459,111 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"iJDgK":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _globalCss = require("./global.css");
 var _resetCss = require("./reset.css");
 var _app1Js = require("./app1.js");
+var _app1JsDefault = parcelHelpers.interopDefault(_app1Js);
 var _app2Js = require("./app2.js");
 var _app3Js = require("./app3.js");
 var _app4Js = require("./app4.js");
+_app1JsDefault.default.init("#app1");
 
-},{"./reset.css":"hR0PW","./global.css":"g58Uw","./app1.js":"bZ3ho","./app2.js":"1hFYX","./app3.js":"39DIW","./app4.js":"jOilj"}],"hR0PW":[function() {},{}],"g58Uw":[function() {},{}],"bZ3ho":[function(require,module,exports) {
+},{"./global.css":"g58Uw","./reset.css":"hR0PW","./app1.js":"bZ3ho","./app2.js":"1hFYX","./app3.js":"39DIW","./app4.js":"jOilj","@parcel/transformer-js/src/esmodule-helpers.js":"7rDvo"}],"g58Uw":[function() {},{}],"hR0PW":[function() {},{}],"bZ3ho":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
 var _jquery = require("jquery");
 var _jqueryDefault = parcelHelpers.interopDefault(_jquery);
 var _app1Css = require("./app1.css");
-const $button1 = _jqueryDefault.default("#add1");
-const $button2 = _jqueryDefault.default("#minus1");
-const $button3 = _jqueryDefault.default("#mul2");
-const $button4 = _jqueryDefault.default("#divide2");
-const $number = _jqueryDefault.default("#number");
-const n1 = localStorage.getItem("n");
-$number.text(n1 || 100);
-$button1.on("click", ()=>{
-    let n = parseInt($number.text());
-    n += 1;
-    localStorage.setItem("n", n);
-    $number.text(n);
+const eventBus = _jqueryDefault.default({
 });
-$button2.on("click", ()=>{
-    let n = parseInt($number.text());
-    n -= 1;
-    localStorage.setItem("n", n);
-    $number.text(n);
-});
-$button3.on("click", ()=>{
-    let n = parseInt($number.text());
-    n *= 2;
-    localStorage.setItem("n", n);
-    $number.text(n);
-});
-$button4.on("click", ()=>{
-    let n = parseInt($number.text());
-    n /= 2;
-    localStorage.setItem("n", n);
-    $number.text(n);
-});
+console.log(eventBus);
+//数据都放到m
+const m = {
+    data: {
+        n: parseInt(localStorage.getItem("n"))
+    },
+    creat () {
+    },
+    delete () {
+    },
+    updata (data) {
+        Object.assign(m.data, data);
+        eventBus.trigger("mupdated");
+        localStorage.setItem("n", m.data.n);
+    }
+};
+//视图相关都放到v
+const v = {
+    container: null,
+    html: `            <div >
+<div>
+    <span id="number">{{n}}</span>
+    <div class="output"></div>
+</div>
+<div>
+    <button id="add1">+1</button>
+    <button id="minus1">-1</button>
+    <button id="mul2">*2</button>
+    <button id="divide2">/2</button>
+</div>
+</div>`,
+    init (container) {
+        v.container = _jqueryDefault.default(container);
+    },
+    render (n) {
+        if (v.container.children.length !== 0) v.container.empty();
+        _jqueryDefault.default(v.html.replace("{{n}}", n)).appendTo(v.container);
+    }
+};
+const c = {
+    init (container) {
+        v.init(container);
+        v.render(m.data.n);
+        c.autoBindEvents();
+        eventBus.on("mupdated", ()=>{
+            v.render(m.data.n);
+        });
+    },
+    events: {
+        "click #add1": "add",
+        "click #minus1": "minus",
+        "click #mul2": "mul",
+        "click #divide2": "div"
+    },
+    add () {
+        m.updata({
+            n: m.data.n + 1
+        });
+    },
+    minus () {
+        m.updata({
+            n: m.data.n - 1
+        });
+    },
+    mul () {
+        m.updata({
+            n: m.data.n * 2
+        });
+    },
+    div () {
+        m.updata({
+            n: m.data.n / 2
+        });
+    },
+    autoBindEvents () {
+        for(let key in c.events){
+            const value = c[c.events[key]];
+            const spaceIndex = key.indexOf(" ");
+            const part1 = key.slice(0, spaceIndex);
+            const part2 = key.slice(spaceIndex + 1);
+            v.container.on(part1, part2, value);
+        }
+    }
+};
+exports.default = c;
 
-},{"jquery":"bE6My","@parcel/transformer-js/src/esmodule-helpers.js":"7rDvo","./app1.css":"cNEhT"}],"bE6My":[function(require,module,exports) {
+},{"jquery":"bE6My","./app1.css":"cNEhT","@parcel/transformer-js/src/esmodule-helpers.js":"7rDvo"}],"bE6My":[function(require,module,exports) {
 /*!
  * jQuery JavaScript Library v3.6.0
  * https://jquery.com/
@@ -7315,7 +7375,7 @@ $button4.on("click", ()=>{
     return jQuery;
 });
 
-},{}],"7rDvo":[function(require,module,exports) {
+},{}],"cNEhT":[function() {},{}],"7rDvo":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -7345,37 +7405,68 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"cNEhT":[function() {},{}],"1hFYX":[function(require,module,exports) {
+},{}],"1hFYX":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _jquery = require("jquery");
 var _jqueryDefault = parcelHelpers.interopDefault(_jquery);
 var _app2Css = require("./app2.css");
+const html = `          
+ <section id="app2">
+<ul class="tab-bar">
+    <li>1</li>
+    <li>2</li>
+</ul>
+<ul class="tab-content">
+    <li>内容1</li>
+    <li>内容2</li>
+</ul>
+</section>
+`;
+const $element = _jqueryDefault.default(html).appendTo(_jqueryDefault.default("body>.page"));
 const $tabBar = _jqueryDefault.default("#app2 .tab-bar");
 const $tabContent = _jqueryDefault.default("#app2 .tab-content");
+const index1 = localStorage.getItem("app2-index") || 0;
 $tabBar.on("click", "li", (e)=>{
     const $li = _jqueryDefault.default(e.currentTarget);
     $li.addClass("selectd").siblings().removeClass("selectd");
     const index = $li.index();
+    localStorage.setItem("app2-index", index);
     console.log(index);
     $tabContent.children().eq(index).addClass("active").siblings().removeClass("active");
 });
-$tabBar.children().eq(0).trigger("click");
+$tabBar.children().eq(index1).trigger("click");
 
-},{"jquery":"bE6My","@parcel/transformer-js/src/esmodule-helpers.js":"7rDvo","./app2.css":"2POXe"}],"2POXe":[function() {},{}],"39DIW":[function(require,module,exports) {
+},{"jquery":"bE6My","./app2.css":"2POXe","@parcel/transformer-js/src/esmodule-helpers.js":"7rDvo"}],"2POXe":[function() {},{}],"39DIW":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _jquery = require("jquery");
 var _jqueryDefault = parcelHelpers.interopDefault(_jquery);
 var _app3Css = require("./app3.css");
+const html = `            <section id="app3">
+<div class="square"></div>
+</section>`;
+const $element = _jqueryDefault.default(html).appendTo(_jqueryDefault.default("body>.page"));
 const $square = _jqueryDefault.default("#app3 .square");
+const active = localStorage.getItem("app3-active") === "yes";
+$square.toggleClass("active", active);
 $square.on("click", ()=>{
-    $square.toggleClass("active");
+    if ($square.hasClass("active")) {
+        $square.removeClass("active");
+        localStorage.setItem("app3-active", "no");
+    } else {
+        $square.addClass("active");
+        localStorage.setItem("app3-active", "yes");
+    }
 });
 
-},{"jquery":"bE6My","@parcel/transformer-js/src/esmodule-helpers.js":"7rDvo","./app3.css":"6afT9"}],"6afT9":[function() {},{}],"jOilj":[function(require,module,exports) {
+},{"jquery":"bE6My","./app3.css":"6afT9","@parcel/transformer-js/src/esmodule-helpers.js":"7rDvo"}],"6afT9":[function() {},{}],"jOilj":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _jquery = require("jquery");
 var _jqueryDefault = parcelHelpers.interopDefault(_jquery);
 var _app4Css = require("./app4.css");
+const html = `            <section id="app4">
+<div class="circle"></div>
+</section>`;
+const $element = _jqueryDefault.default(html).appendTo(_jqueryDefault.default("body>.page"));
 const $circle = _jqueryDefault.default("#app4 .circle");
 $circle.on("mouseenter", ()=>{
     $circle.addClass("active");
